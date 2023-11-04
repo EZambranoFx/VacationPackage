@@ -27,7 +27,7 @@ final class VacationPackageApplication {
     
     public static void main(final String[] args) {
 //CHECKSTYLE: ON
-    	@SuppressWarnings("PMD.ExceptionAsFlowControl")
+    	@SuppressWarnings("PMD.ExceptionAsFlowControl")// DELETE IF YOU DO NOT COMPIRE THE CODE PLEASE
         try (Scanner scanner = new Scanner(System.in)) {
             logger.info("Enter destination (Paris or New York City):");
             final String destination = scanner.nextLine();
