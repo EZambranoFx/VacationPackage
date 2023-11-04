@@ -18,7 +18,7 @@ public enum Destination {
     /**
      * Costo adicional.
      */
-    private final int additionalCost;
+    private int additionalCost;
 
     /**
      * Constructor que establece el costo adicional del destino.
@@ -45,14 +45,11 @@ public enum Destination {
      * @return true si el destino es válido, false en caso contrario.
      */
     public static boolean isValidDestination(final String destination) {
-        boolean isValid = false;
-        for (final Destination dest : values()) {
+        for (Destination dest : Destination.values()) {
             if (dest.name().equalsIgnoreCase(destination)) {
-                isValid = true;
-                break;
+                return true;
             }
         }
-
-        return isValid;
+        return false;
     }
 }

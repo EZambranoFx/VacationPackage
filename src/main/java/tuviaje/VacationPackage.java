@@ -2,160 +2,98 @@
 // All rights reserved
 package tuviaje;
 
-import java.util.Locale;
-
-/**
- * . Vacation Package
- *
- * @author Enrique Zambrano
- * @version 1.0
- * @since 2023-11-01
- */
 public class VacationPackage {
     /**
-     * 1000.
-     */
-    private static final int BASE_COST = 1000;
+    * El destino del Package de vacaciones.
+    * */
+    private String destination;
     /**
-     * 4.
-     */
-    private static final int MN_DISCOUNT = 4;
+    * El número de viajeros en el paquete de vacaciones.
+    */
+    private int numberOfTravelers;
     /**
-     * 10.
-     */
-    private static final int MX_DISCOUNT = 10;
-    /**
-     * 0.10.
-     */
-    private static final double D_P_10 = 0.10;
-    /**
-     * 30.
-     */
-    private static final double D_P_20 = 0.20;
-    /**
-     * 30.
-     */
-    private static final int MX_D_FOR_PRTN = 30;
-    /**
-     * 200.
-     */
-    private static final int PENALTY_AMOUNT = 200;
-    /**
-     * 200.
-     */
-    private static final int ALL_COST_TVR = 200;
-    /**
-     * 150.
-     */
-    private static final int ADV_COST_TVR = 150;
-    /**
-     * 100.
-     */
-    private static final int SPA_COST_TVR = 100;
-    /**
-     * destination.
-     */
-    private final String dstn;
-    /**
-     * El número de viajeros en el paquete de vacaciones.
-     */
-    private final int nbrOfTrls;
-    /**
-     * La duración del paquete de vacaciones en días.
-     */
-    private final int duration;
-    /**
-     * allInclusive.
-     */
-    private boolean allInclusivePckg;
-    /**
-     * adventureActivities.
-     */
-    private boolean advtActPckg;
-    /**
-     * spaAndWellness.
-     */
-    private boolean spaWellPckg;
-    /**
-     * addAllInclusivePackage.
-     */
-    public void addAllInclusivePackage() {
-             allInclusivePckg = true;
-    }
-    /**
-     * addAdventureActivitiesPackage.
-     */
-    public void addAdventureActivitiesPackage() {
-        advtActPckg = true;
-    }
-
-    /**
-     * addSpaAndWellnessPackage.
-     */
-    public void addSpaAndWellnessPackage() {
-        spaWellPckg = true;
-    }
-
+    * La duración del paquete de vacaciones en días.
+    */
+    private int duration;
     /**
      * Crea un paquete de vacaciones con los siguientes parámetros.
      *
-     * @param pckgDtn El destino del paquete de vacaciones.
-     * @param travelers          El number de viajeros.
-     * @param durtion            La duración del paquete de vacaciones.
+     * @param packageDestination El destino del paquete de vacaciones.
+     * @param travelers El number de viajeros.
+     * @param durtion La duración del paquete de vacaciones en días.
      */
-    public VacationPackage(
-            final String pckgDtn,
-            final int travelers,
-            final int durtion
-        ) {
-        this.dstn = pckgDtn;
-        this.nbrOfTrls = travelers;
+    public VacationPackage(final String packageDestination,
+        final int travelers,
+        final int durtion) {
+        this.destination = packageDestination;
+        this.numberOfTravelers = travelers;
         this.duration = durtion;
     }
+    /**
+    * 1000.
+    */
+    private static final int BASE_COST = 1000;
+    /**
+    * 4.
+    */
+    private static final int MIN_TRAVELERS_FOR_DISCOUNT = 4;
+    /**
+    * 10.
+    */
+    private static final int MAX_TRAVELERS_FOR_DISCOUNT = 10;
+    /**
+    * 0.10.
+    */
+    private static final double DISCOUNT_PERCENTAGE_10 = 0.10;
+    /**
+    * 0.20.
+    */
+    private static final double DISCOUNT_PERCENTAGE_20 = 0.20;
+    /**
+    * 7.
+    */
+    private static final int MIN_DURATION_FOR_PENALTY = 7;
+    /**
+    * 30.
+    */
+    private static final int MAX_DURATION_FOR_PROMOTION = 30;
+    /**
+    * 200.
+    */
+    private static final int PENALTY_AMOUNT = 200;
     /**
      * Calcula el costo total del paquete de vacaciones.
      *
      * @return El costo total del paquete de vacaciones.
      */
-    @SuppressWarnings("PMD.NPathComplexity")
     public int calculateTotalCost() {
-        int totC = BASE_COST;
+        int totalCost = BASE_COST;
 
-        // Additional cost based on destination
-        switch (Destination.valueOf(dstn.toUpperCase(Locale.ROOT))) {
-        case PARIS:
-            totC += Destination.PARIS.getAdditionalCost();
-            break;
-        case NEW_YORK_CITY:
-            totC += Destination.NEW_YORK_CITY.getAdditionalCost();
-            break;
-        default:
-            break;
+     // Additional cost based on destination
+        switch (Destination.valueOf(destination.toUpperCase())) {
+            case PARIS:
+                totalCost += Destination.PARIS.getAdditionalCost();
+                break;
+            case NEW_YORK_CITY:
+                totalCost += Destination.NEW_YORK_CITY.getAdditionalCost();
+                break;
+            default:
+                break;
         }
 
         // Group discount
-        if (nbrOfTrls > MN_DISCOUNT) {
-            if (nbrOfTrls <= MX_DISCOUNT) {
-                totC -= (totC * D_P_10);
-            }
-        } else if (nbrOfTrls > MX_DISCOUNT) {
-            totC -= (totC * D_P_20);
-        }
-        // Promotion policy
-        if (duration > MX_D_FOR_PRTN || nbrOfTrls == 2) {
-            totC -= PENALTY_AMOUNT;
+        if (numberOfTravelers > MIN_TRAVELERS_FOR_DISCOUNT
+            && numberOfTravelers <= MAX_TRAVELERS_FOR_DISCOUNT) {
+            totalCost -= (totalCost * DISCOUNT_PERCENTAGE_10);
+        } else if (numberOfTravelers > MAX_TRAVELERS_FOR_DISCOUNT) {
+            totalCost -= (totalCost * DISCOUNT_PERCENTAGE_20);
         }
 
-        // Add-ons
-        if (allInclusivePckg) {
-            totC += ALL_COST_TVR * nbrOfTrls;
+        // Promotion policy
+        if (duration > MAX_DURATION_FOR_PROMOTION || numberOfTravelers == 2) {
+            totalCost -= PENALTY_AMOUNT;
         }
-        if (advtActPckg) {
-            totC += ADV_COST_TVR * nbrOfTrls;
-        }
-        if (spaWellPckg) {
-            totC += SPA_COST_TVR * nbrOfTrls;
-        }
-        return totC;
+
+        return totalCost;
     }
 }
